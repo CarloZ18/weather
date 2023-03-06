@@ -16,7 +16,7 @@ export const kelvinToCelsius = (temp) => {
   return Math.floor(temp - 273.15) + "°C";
 };
 
-export const currentWeekDay = () => {
+export const currentWeekDay = (day) => {
   const weekDays = [
     "Sunday",
     "Monday",
@@ -26,7 +26,7 @@ export const currentWeekDay = () => {
     "Friday",
     "Saturday",
   ];
-  const currentDay = weekDays[new Date().getDay()];
+  const currentDay = weekDays[new Date(day).getDay()];
   return currentDay;
 };
 
@@ -49,7 +49,7 @@ export const convertIcon = (icon, className) => {
   } else if (icon === "13d" || icon === "13n") {
     return <BsSnow className={className} />;
   } else if (icon === "01n") {
-  /* Night icons*/
+    /* Night icons*/
     return <BsMoon className={className} />;
   } else if (icon === "02n") {
     return <BsCloudMoon className={className} />;

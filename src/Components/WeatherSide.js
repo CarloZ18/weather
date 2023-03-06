@@ -1,33 +1,28 @@
 import styled from "styled-components";
 import { SlLocationPin } from "react-icons/sl";
 import { convertIcon, currentWeekDay, kelvinToCelsius } from "../utils";
-export const WeatherSide = ({
-  nameCity,
-  country,
-  weatherIcon,
-  currentTemp,
-  tempDescription,
-}) => {
-  const currentDate = () => {
-    const date = new Date().toDateString().split(" ");
-    return date[2] + " " + date[1] + " " + date[3];
-  };
 
+export const WeatherSide = ({
+  numDay,
+ data,
+  currentDate
+}) => {
+  
   return (
     <WeatherSideDiv>
       <WeatherGradient />
       <DataContainer>
-        <DataDayname>{currentWeekDay()}</DataDayname>
-        <DataDay>{currentDate()}</DataDay>
+        <DataDayname>{currentWeekDay(numDay)}</DataDayname>
+        <DataDay>{currentDate(numDay)}</DataDay>
         <Location>
           <SlLocationPin />
-          {nameCity}, {country}
+          {data.city.name}, {data.city.country}
         </Location>
       </DataContainer>
       <WeatherContainer>
-        {convertIcon(weatherIcon, "weather-icon feather")}
-        <WeatherTemp>{kelvinToCelsius(currentTemp)}</WeatherTemp>
-        <WeatherDesc>{tempDescription}</WeatherDesc>
+        {convertIcon(data.list[0].weather[0].icon, "weather-icon feather")}
+        <WeatherTemp>{kelvinToCelsius(data.list[0].main.temp)}</WeatherTemp>
+        <WeatherDesc>{data.list[0].weather[0].main}</WeatherDesc>
       </WeatherContainer>
     </WeatherSideDiv>
   );

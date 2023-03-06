@@ -1,62 +1,70 @@
 import styled from "styled-components";
-import { FiCloud, FiCloudSnow, FiCloudRain } from "react-icons/fi";
-import { BsSun } from "react-icons/bs";
 import { SlLocationPin } from "react-icons/sl";
-import { currentWeekDay } from "../utils";
+import { convertIcon, currentWeekDay, kelvinToCelsius } from "../utils";
 
-export const InfoSide = () => {
- 
-  
+export const InfoSide = ({
+  data,
+  changeWeatherDay,
+  refsWeekDays,
+  weekDaysRef,
+  nameCity,
+  numDay
+}) => {
+
   return (
     <InfoSideDiv>
       <TodayInfoContainer>
         <TodayInfo className="today-info">
-          <div className="precipitation">
-            <span className="title">PRECIPITATION</span>
-            <span className="value">{precipitationValue}</span>
+          <div className="pressure">
+            <span className="title">PRESSURE</span>
+            <span className="value">{data?.list[numDay].main.pressure} hPa</span>
             <div className="clear"></div>
           </div>
           <div className="humidity">
             <span className="title">HUMIDITY</span>
-            <span className="value">{humidityValue}</span>
+            <span className="value">{data?.list[numDay].main.humidity}%</span>
             <div className="clear"></div>
           </div>
           <div className="wind">
             <span className="title">WIND</span>
-            <span className="value">{windValue}</span>
+            <span className="value">{data?.list[numDay].wind.speed}km/h</span>
             <div className="clear"></div>
           </div>
         </TodayInfo>
       </TodayInfoContainer>
       <div className="week-container">
-      <WeekList className="week-list">
-    <li className="active">
-      <BsSun className="feather feather-sun day-icon"></BsSun>
-      <span className="day-name">Tue</span>
-      <span className="day-temp">29°C</span>
-    </li>
-    <li>
-      <FiCloud className="feather feather-cloud day-icon"></FiCloud>
-      <span className="day-name">Wed</span>
-      <span className="day-temp">21°C</span>
-    </li>
-    <li>
-      <FiCloudSnow className="feather feather-cloud-snow day-icon"></FiCloudSnow>
-      <span className="day-name">Thu</span>
-      <span className="day-temp">08°C</span>
-    </li>
-    <li>
-      <FiCloudRain className="feather feather-cloud-rain day-icon"></FiCloudRain>
-      <span className="day-name">Fry</span>
-      <span className="day-temp">19°C</span>
-    </li>
-    <div className="clear"></div>
-  </WeekList>
+        <WeekList className="week-list">
+          {data?.list.map((e, index) => (
+            <li
+              key={e.dt}
+              onClick={() =>
+                changeWeatherDay(index, weekDaysRef.current[index])
+              }
+              ref={refsWeekDays}
+            >
+              {convertIcon(
+                data.list[index].weather[0].icon,
+                "feather feather-sun day-icon"
+              )}
+              <span className="day-name">
+                {currentWeekDay(e.dt_txt).slice(0, 3)}
+              </span>
+              <span className="day-temp">
+                {kelvinToCelsius(data.list[index].main.temp)}
+              </span>
+            </li>
+          ))}
+          <div className="clear"></div>
+        </WeekList>
       </div>
       <LocationContainer>
         <button className="location-button">
-          <SlLocationPin className="feather feather-map-pin"></SlLocationPin>
-          <span>Change location</span>
+          <div>
+            <SlLocationPin className="feather feather-map-pin"></SlLocationPin>
+            <span>Change location</span>
+          </div>
+
+          <input placeholder="Enter your city"></input>
         </button>
       </LocationContainer>
     </InfoSideDiv>
@@ -170,10 +178,26 @@ const LocationContainer = styled.div`
     transition: transform 200ms ease, -webkit-transform 200ms ease;
   }
 
-  button:hover {
-    -webkit-transform: scale(0.95);
-    -ms-transform: scale(0.95);
-    transform: scale(0.95);
+  button:hover div {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: ease-in 500ms;
+  }
+
+  button input {
+    position: absolute;
+    top: 324px;
+    left: 50px;
+    opacity: 0;
+    border: none;
+    padding: 3px;
+    text-align: center;
+  }
+
+  button:hover input {
+    opacity: 1;
+    left: 90px;
+    transition: ease-in 500ms;
   }
 
   button .feather {

@@ -2,38 +2,59 @@ import styled from "styled-components";
 import { WeatherSide } from "./Components/WeatherSide";
 import { InfoSide } from "./Components/InfoSide";
 import { useState } from "react";
+import { useRef } from "react";
+import { useFetch } from "./api/useFetch";
 import { useEffect } from "react";
-import { apiWeather } from "./api/api";
 
 function App() {
-  const [country, setCountry] = useState("VE");
   const [nameCity, setNameCity] = useState("Caracas");
-  const [currentTemp, setCurrentTemp] = useState(300);
-  const [tempDescription, setTempDescription] = useState("Sunny");
-  const [weatherIcon, setWeatherIcon] = useState("10b");
+  const [numDay, setNumDay] = useState(0);
+  const [pressureValue, setPressureValue] = useState(4);
+  const [humidityValue, setHumidityValue] = useState(4);
+  const [windValue, setWindValue] = useState(4);
 
-  const [precipitationValue, setPrecipitationValue] =useState()
-  useEffect(() => {
-    apiWeather("forecast", nameCity).then(function (response) {
-      const data = response.data;
-      console.log(data);
-      setCountry(data.city.country);
-      setNameCity(data.city.name);
-      setCurrentTemp(data.list[0].main.temp);
-      setTempDescription(data.list[0].weather[0].main);
-      setWeatherIcon(data.list[0].weather[0].icon);
-    });
-  }, [nameCity]);
+  const weekDaysRef = useRef([]);
+
+  const { data } = useFetch(nameCity);
+
+  console.log(data);
+
+  const refsWeekDays = (el) => {
+    if (el && !weekDaysRef.current.includes(el)) {
+      weekDaysRef.current.push(el);
+    }
+  };
+
+  const changeWeatherDay = (i, element) => {
+    setNumDay(i);
+    element.classList.add("active");
+    i !== numDay && weekDaysRef.current[numDay].classList.remove("active");
+  };
+  
+  const changeLocation = () => {};
+
+  const currentDate = (numDay) => {
+    const today = new Date();
+    let dayInMiliseconds = 24 * 60 * 60 * 1000;
+    const date = new Date(today.getTime() + dayInMiliseconds * numDay)
+      .toDateString()
+      .split(" ");
+    return date[2] + " " + date[1] + " " + date[3];
+  };
+
   return (
     <ContainerApp>
-      <WeatherSide
-        country={country}
+      {data !== null && (
+        <WeatherSide numDay={numDay} data={data} currentDate={currentDate} />
+      )}
+      <InfoSide
+        data={data}
+        changeWeatherDay={changeWeatherDay}
+        refsWeekDays={refsWeekDays}
+        weekDaysRef={weekDaysRef}
         nameCity={nameCity}
-        currentTemp={currentTemp}
-        tempDescription={tempDescription}
-        weatherIcon={weatherIcon}
+        numDay={numDay}
       />
-      <InfoSide />
     </ContainerApp>
   );
 }
