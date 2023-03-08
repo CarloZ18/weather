@@ -9,29 +9,28 @@ import { useEffect } from "react";
 function App() {
   const [nameCity, setNameCity] = useState("Caracas");
   const [numDay, setNumDay] = useState(0);
-  const [pressureValue, setPressureValue] = useState(4);
-  const [humidityValue, setHumidityValue] = useState(4);
-  const [windValue, setWindValue] = useState(4);
-
-  const weekDaysRef = useRef([]);
+  
+  const refWeekDays = useRef([]);
 
   const { data } = useFetch(nameCity);
 
   console.log(data);
 
   const refsWeekDays = (el) => {
-    if (el && !weekDaysRef.current.includes(el)) {
-      weekDaysRef.current.push(el);
+    if (el && !refWeekDays.current.includes(el)) {
+      refWeekDays.current.push(el);
     }
   };
 
   const changeWeatherDay = (i, element) => {
     setNumDay(i);
     element.classList.add("active");
-    i !== numDay && weekDaysRef.current[numDay].classList.remove("active");
+    i !== numDay && refWeekDays.current[numDay].classList.remove("active");
   };
-  
-  const changeLocation = () => {};
+
+  const changeLocation = (nameCity) => {
+    setNameCity(nameCity);
+  };
 
   const currentDate = (numDay) => {
     const today = new Date();
@@ -42,20 +41,44 @@ function App() {
     return date[2] + " " + date[1] + " " + date[3];
   };
 
+  const currentWeekDay = (day) => {
+    const weekDays = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+
+    return weekDays[new Date(currentDate(day)).getDay()];
+  };
+
   return (
-    <ContainerApp>
+    <>
       {data !== null && (
-        <WeatherSide numDay={numDay} data={data} currentDate={currentDate} />
+        <ContainerApp>
+          <WeatherSide
+            numDay={numDay}
+            data={data}
+            currentDate={currentDate}
+            currentWeekDay={currentWeekDay}
+          />
+
+          <InfoSide
+            data={data}
+            changeWeatherDay={changeWeatherDay}
+            currentDate={currentDate}
+            refsWeekDays={refsWeekDays}
+            refWeekDays={refWeekDays}
+            numDay={numDay}
+            currentWeekDay={currentWeekDay}
+            changeLocation={changeLocation}
+          />
+        </ContainerApp>
       )}
-      <InfoSide
-        data={data}
-        changeWeatherDay={changeWeatherDay}
-        refsWeekDays={refsWeekDays}
-        weekDaysRef={weekDaysRef}
-        nameCity={nameCity}
-        numDay={numDay}
-      />
-    </ContainerApp>
+    </>
   );
 }
 const ContainerApp = styled.div`

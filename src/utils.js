@@ -16,20 +16,6 @@ export const kelvinToCelsius = (temp) => {
   return Math.floor(temp - 273.15) + "°C";
 };
 
-export const currentWeekDay = (day) => {
-  const weekDays = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  const currentDay = weekDays[new Date(day).getDay()];
-  return currentDay;
-};
-
 export const convertIcon = (icon, className) => {
   /*Day icons*/
   if (icon === "01d") {
@@ -37,7 +23,7 @@ export const convertIcon = (icon, className) => {
   } else if (icon === "02d") {
     return <BsCloudSun className={className} />;
   } else if (icon === "03d" || icon === "03n") {
-    <BsCloudy className={className} />;
+    return <BsCloudy className={className} />;
   } else if (icon === "04d" || icon === "04n") {
     return <BsClouds className={className} />;
   } else if (icon === "09d" || icon === "09n") {

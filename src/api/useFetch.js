@@ -14,12 +14,3 @@ export function useFetch(nameCity) {
   }, [nameCity]);
   return { data };
 }
-
-/*setCountry(data.city.country);
-      setNameCity(data.city.name);
-      setCurrentTemp(data.list[numDay].main.temp);
-      setTempDescription(data.list[numDay].weather[0].main);
-      setWeatherIcon(data.list[numDay].weather[0].icon);
-      setHumidityValue(data.list[numDay].main.humidity);
-      setPressureValue(data.list[numDay].main.pressure);
-      setWindValue(data.list[numDay].wind.speed);*/

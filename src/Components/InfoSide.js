@@ -1,15 +1,27 @@
 import styled from "styled-components";
 import { SlLocationPin } from "react-icons/sl";
-import { convertIcon, currentWeekDay, kelvinToCelsius } from "../utils";
+import { convertIcon, kelvinToCelsius } from "../utils";
+import { useState } from "react";
+import { useEffect } from "react";
 
 export const InfoSide = ({
   data,
   changeWeatherDay,
   refsWeekDays,
-  weekDaysRef,
-  nameCity,
-  numDay
+  refWeekDays,
+  currentWeekDay,
+  numDay,
+  changeLocation,
 }) => {
+  const [inputValue, setInputValue] = useState();
+
+  const saveInputValue = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  useEffect(() => {
+    refWeekDays.current[0].classList.add("active");
+  }, []);
 
   return (
     <InfoSideDiv>
@@ -17,17 +29,17 @@ export const InfoSide = ({
         <TodayInfo className="today-info">
           <div className="pressure">
             <span className="title">PRESSURE</span>
-            <span className="value">{data?.list[numDay].main.pressure} hPa</span>
+            <span className="value">{data.list[numDay].main.pressure} hPa</span>
             <div className="clear"></div>
           </div>
           <div className="humidity">
             <span className="title">HUMIDITY</span>
-            <span className="value">{data?.list[numDay].main.humidity}%</span>
+            <span className="value">{data.list[numDay].main.humidity}%</span>
             <div className="clear"></div>
           </div>
           <div className="wind">
             <span className="title">WIND</span>
-            <span className="value">{data?.list[numDay].wind.speed}km/h</span>
+            <span className="value">{data.list[numDay].wind.speed}km/h</span>
             <div className="clear"></div>
           </div>
         </TodayInfo>
@@ -38,7 +50,7 @@ export const InfoSide = ({
             <li
               key={e.dt}
               onClick={() =>
-                changeWeatherDay(index, weekDaysRef.current[index])
+                changeWeatherDay(index, refWeekDays.current[index])
               }
               ref={refsWeekDays}
             >
@@ -47,7 +59,7 @@ export const InfoSide = ({
                 "feather feather-sun day-icon"
               )}
               <span className="day-name">
-                {currentWeekDay(e.dt_txt).slice(0, 3)}
+                {currentWeekDay(index).slice(0, 3)}
               </span>
               <span className="day-temp">
                 {kelvinToCelsius(data.list[index].main.temp)}
@@ -58,13 +70,20 @@ export const InfoSide = ({
         </WeekList>
       </div>
       <LocationContainer>
-        <button className="location-button">
-          <div>
+        <button
+          className="location-button"
+          onClick={() => changeLocation(inputValue)}
+        >
+          <div className="location-div">
             <SlLocationPin className="feather feather-map-pin"></SlLocationPin>
             <span>Change location</span>
           </div>
-
-          <input placeholder="Enter your city"></input>
+          <input
+            placeholder="Enter your city"
+            className="location-input"
+            onChange={saveInputValue}
+          />
+          <p>Change</p>
         </button>
       </LocationContainer>
     </InfoSideDiv>
@@ -103,7 +122,7 @@ const TodayInfo = styled.div`
 const WeekList = styled.ul`
   list-style-type: none;
   padding: 0;
-  margin: 10px 35px;
+  margin: 10px 30px;
   -webkit-box-shadow: 0 0 50px -5px rgba(0, 0, 0, 0.25);
   box-shadow: 0 0 50px -5px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
@@ -159,6 +178,7 @@ const LocationContainer = styled.div`
   button {
     outline: none;
     width: 100%;
+    height: 40px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     border: none;
@@ -178,6 +198,12 @@ const LocationContainer = styled.div`
     transition: transform 200ms ease, -webkit-transform 200ms ease;
   }
 
+  button div {
+    opacity: 1;
+    transform: translateX(0px);
+    transition: ease-in 500ms;
+  }
+
   button:hover div {
     opacity: 0;
     transform: translateX(50px);
@@ -186,17 +212,34 @@ const LocationContainer = styled.div`
 
   button input {
     position: absolute;
-    top: 324px;
+    top: 323px;
     left: 50px;
+    border-radius: 50px;
     opacity: 0;
     border: none;
     padding: 3px;
     text-align: center;
+    transition: ease-in 500ms;
   }
 
   button:hover input {
+    cursor: pointer;
     opacity: 1;
-    left: 90px;
+    transition: ease-in 500ms;
+  }
+
+  button p {
+    position: absolute;
+    cursor: pointer;
+    top: 314px;
+    left: 200px;
+    opacity: 0;
+    transition: ease-in 500ms;
+  }
+
+  button:hover p {
+    left: 230px;
+    opacity: 1;
     transition: ease-in 500ms;
   }
 
