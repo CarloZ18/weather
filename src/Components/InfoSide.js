@@ -20,73 +20,81 @@ export const InfoSide = ({
   };
 
   useEffect(() => {
-    refWeekDays.current[0].classList.add("active");
-  }, []);
+    refWeekDays.current[0]?.classList.add("active");
+  
+  },[]);
 
   return (
-    <InfoSideDiv>
-      <TodayInfoContainer>
-        <TodayInfo className="today-info">
-          <div className="pressure">
-            <span className="title">PRESSURE</span>
-            <span className="value">{data.list[numDay].main.pressure} hPa</span>
-            <div className="clear"></div>
+    <>
+      {data !== null && (
+        <InfoSideDiv>
+          <TodayInfoContainer>
+            <TodayInfo className="today-info">
+              <div className="pressure">
+                <span className="title">PRESSURE</span>
+                <span className="value">
+                  {data.list[numDay].main.pressure} hPa
+                </span>
+                <div className="clear"></div>
+              </div>
+              <div className="humidity">
+                <span className="title">HUMIDITY</span>
+                <span className="value">
+                  {data.list[numDay].main.humidity}%
+                </span>
+                <div className="clear"></div>
+              </div>
+              <div className="wind">
+                <span className="title">WIND</span>
+                <span className="value">
+                  {data.list[numDay].wind.speed}km/h
+                </span>
+                <div className="clear"></div>
+              </div>
+            </TodayInfo>
+          </TodayInfoContainer>
+          <div className="week-container">
+            <WeekList className="week-list">
+              {data.list.map((e, index) => (
+                <li
+                  key={e.dt}
+                  onClick={() =>
+                    changeWeatherDay(index, refWeekDays.current[index])
+                  }
+                  ref={refsWeekDays}
+                >
+                  {convertIcon(
+                    data.list[index].weather[0].icon,
+                    "feather feather-sun day-icon"
+                  )}
+                  <span className="day-name">
+                    {currentWeekDay(index).slice(0, 3)}
+                  </span>
+                  <span className="day-temp">
+                    {kelvinToCelsius(data.list[index].main.temp)}
+                  </span>
+                </li>
+              ))}
+              <div className="clear"></div>
+            </WeekList>
           </div>
-          <div className="humidity">
-            <span className="title">HUMIDITY</span>
-            <span className="value">{data.list[numDay].main.humidity}%</span>
-            <div className="clear"></div>
-          </div>
-          <div className="wind">
-            <span className="title">WIND</span>
-            <span className="value">{data.list[numDay].wind.speed}km/h</span>
-            <div className="clear"></div>
-          </div>
-        </TodayInfo>
-      </TodayInfoContainer>
-      <div className="week-container">
-        <WeekList className="week-list">
-          {data?.list.map((e, index) => (
-            <li
-              key={e.dt}
-              onClick={() =>
-                changeWeatherDay(index, refWeekDays.current[index])
-              }
-              ref={refsWeekDays}
-            >
-              {convertIcon(
-                data.list[index].weather[0].icon,
-                "feather feather-sun day-icon"
-              )}
-              <span className="day-name">
-                {currentWeekDay(index).slice(0, 3)}
-              </span>
-              <span className="day-temp">
-                {kelvinToCelsius(data.list[index].main.temp)}
-              </span>
-            </li>
-          ))}
-          <div className="clear"></div>
-        </WeekList>
-      </div>
-      <LocationContainer>
-        <button
-          className="location-button"
-          onClick={() => changeLocation(inputValue)}
-        >
-          <div className="location-div">
-            <SlLocationPin className="feather feather-map-pin"></SlLocationPin>
-            <span>Change location</span>
-          </div>
-          <input
-            placeholder="Enter your city"
-            className="location-input"
-            onChange={saveInputValue}
-          />
-          <p>Change</p>
-        </button>
-      </LocationContainer>
-    </InfoSideDiv>
+          <LocationContainer>
+            <button className="location-button">
+              <div className="location-div">
+                <SlLocationPin className="feather feather-map-pin"></SlLocationPin>
+                <span>Change location</span>
+              </div>
+              <input
+                placeholder="Enter your city"
+                className="location-input"
+                onChange={saveInputValue}
+              />
+              <p onClick={() => changeLocation(inputValue)}>Change</p>
+            </button>
+          </LocationContainer>
+        </InfoSideDiv>
+      )}
+    </>
   );
 };
 

@@ -12,9 +12,7 @@ function App() {
   
   const refWeekDays = useRef([]);
 
-  const { data } = useFetch(nameCity);
-
-  console.log(data);
+  const { data,loading } = useFetch(nameCity);
 
   const refsWeekDays = (el) => {
     if (el && !refWeekDays.current.includes(el)) {
@@ -29,7 +27,10 @@ function App() {
   };
 
   const changeLocation = (nameCity) => {
-    setNameCity(nameCity);
+    if(nameCity.length > 3){
+      setNameCity(nameCity);
+    }
+    
   };
 
   const currentDate = (numDay) => {
@@ -57,7 +58,7 @@ function App() {
 
   return (
     <>
-      {data !== null && (
+      {loading === true? <>Loading data...</>: (
         <ContainerApp>
           <WeatherSide
             numDay={numDay}

@@ -4,24 +4,31 @@ import { convertIcon, kelvinToCelsius } from "../utils";
 
 export const WeatherSide = ({ numDay, data, currentDate, currentWeekDay }) => {
   return (
-    <WeatherSideDiv>
-      <WeatherGradient />
-      <DataContainer>
-        <DataDayname>{currentWeekDay(numDay)}</DataDayname>
-        <DataDay>{currentDate(numDay)}</DataDay>
-        <Location>
-          <SlLocationPin />
-          {data.city.name}, {data.city.country}
-        </Location>
-      </DataContainer>
-      <WeatherContainer>
-        {convertIcon(data.list[numDay].weather[0].icon, "weather-icon feather")}
-        <WeatherTemp>
-          {kelvinToCelsius(data.list[numDay].main.temp)}
-        </WeatherTemp>
-        <WeatherDesc>{data.list[numDay].weather[0].main}</WeatherDesc>
-      </WeatherContainer>
-    </WeatherSideDiv>
+    <>
+      {data !== null && (
+        <WeatherSideDiv>
+          <WeatherGradient />
+          <DataContainer>
+            <DataDayname>{currentWeekDay(numDay)}</DataDayname>
+            <DataDay>{currentDate(numDay)}</DataDay>
+            <Location>
+              <SlLocationPin />
+              {data.city.name}, {data.city.country}
+            </Location>
+          </DataContainer>
+          <WeatherContainer>
+            {convertIcon(
+              data.list[numDay].weather[0].icon,
+              "weather-icon feather"
+            )}
+            <WeatherTemp>
+              {kelvinToCelsius(data.list[numDay].main.temp)}
+            </WeatherTemp>
+            <WeatherDesc>{data.list[numDay].weather[0].main}</WeatherDesc>
+          </WeatherContainer>
+        </WeatherSideDiv>
+      )}
+    </>
   );
 };
 
