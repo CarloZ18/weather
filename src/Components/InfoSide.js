@@ -241,6 +241,9 @@ const LocationContainer = styled.div`
     padding: 3px;
     text-align: center;
     transition: ease-in 500ms;
+    @media (max-width: 768px) {
+    width:140px;
+  }
   }
 
   button:hover input {
@@ -262,6 +265,9 @@ const LocationContainer = styled.div`
     left: 230px;
     opacity: 1;
     transition: ease-in 500ms;
+    @media (max-width: 768px) {
+    left: 200px;
+  }
   }
 
   button .feather {
