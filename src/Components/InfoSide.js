@@ -3,27 +3,32 @@ import { SlLocationPin } from "react-icons/sl";
 import { convertIcon, kelvinToCelsius } from "../utils";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useRef } from "react";
 
 export const InfoSide = ({
   data,
   changeWeatherDay,
-  refsWeekDays,
-  refWeekDays,
   currentWeekDay,
   numDay,
   changeLocation,
 }) => {
   const [inputValue, setInputValue] = useState();
 
+  const refWeekDays = useRef([]);
+
+  const refsWeekDays = (el) => {
+    if (el && !refWeekDays.current.includes(el)) {
+      refWeekDays.current.push(el);
+    }
+  };
+
   const saveInputValue = (e) => {
     setInputValue(e.target.value);
   };
-
   useEffect(() => {
-    refWeekDays.current[0]?.classList.add("active");
-  
-  },[]);
-
+    refWeekDays.current[numDay]?.classList.add("active");
+    return;
+  }, []);
   return (
     <>
       {data !== null && (
@@ -58,6 +63,7 @@ export const InfoSide = ({
               {data.list.map((e, index) => (
                 <li
                   key={e.dt}
+                  className={numDay === index ? "active" : ""}
                   onClick={() =>
                     changeWeatherDay(index, refWeekDays.current[index])
                   }
@@ -104,6 +110,9 @@ const InfoSideDiv = styled.div`
   height: 100%;
   padding-top: 25px;
   width: 350px;
+  @media (max-width: 768px) {
+  width: 300px;
+  }
 `;
 
 const TodayInfoContainer = styled.div`
@@ -134,6 +143,10 @@ const WeekList = styled.ul`
   -webkit-box-shadow: 0 0 50px -5px rgba(0, 0, 0, 0.25);
   box-shadow: 0 0 50px -5px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
+
+  @media (max-width: 768px) {
+    margin: 10px 10px;
+  }
 
   li {
     float: left;

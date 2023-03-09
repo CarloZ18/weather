@@ -88,10 +88,16 @@ const WeatherContainer = styled.div`
   position: absolute;
   bottom: 25px;
   left: 25px;
+  @media (max-width: 768px) {
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  }
 
   .weather-icon.feather {
     height: 80px;
     width: auto;
+    padding-top: 5px;
   }
 `;
 
@@ -99,8 +105,12 @@ const WeatherTemp = styled.h1`
   margin: 0;
   font-weight: 700;
   font-size: 4em;
+  @media (max-width: 768px) {
+  padding-left: 30px;
+  }
 `;
 
 const WeatherDesc = styled.span`
-  margin: 0;
+  padding-left:5px;
+  padding-top: 5px;
 `;

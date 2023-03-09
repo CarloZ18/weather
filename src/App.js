@@ -2,28 +2,18 @@ import styled from "styled-components";
 import { WeatherSide } from "./Components/WeatherSide";
 import { InfoSide } from "./Components/InfoSide";
 import { useState } from "react";
-import { useRef } from "react";
 import { useFetch } from "./api/useFetch";
 import { useEffect } from "react";
 
 function App() {
   const [nameCity, setNameCity] = useState("Caracas");
   const [numDay, setNumDay] = useState(0);
-  
-  const refWeekDays = useRef([]);
 
   const { data,loading } = useFetch(nameCity);
 
-  const refsWeekDays = (el) => {
-    if (el && !refWeekDays.current.includes(el)) {
-      refWeekDays.current.push(el);
-    }
-  };
 
-  const changeWeatherDay = (i, element) => {
+  const changeWeatherDay = (i) => {
     setNumDay(i);
-    element.classList.add("active");
-    i !== numDay && refWeekDays.current[numDay].classList.remove("active");
   };
 
   const changeLocation = (nameCity) => {
@@ -55,6 +45,9 @@ function App() {
 
     return weekDays[new Date(currentDate(day)).getDay()];
   };
+useEffect(()=>{
+  
+})
 
   return (
     <>
@@ -71,8 +64,6 @@ function App() {
             data={data}
             changeWeatherDay={changeWeatherDay}
             currentDate={currentDate}
-            refsWeekDays={refsWeekDays}
-            refWeekDays={refWeekDays}
             numDay={numDay}
             currentWeekDay={currentWeekDay}
             changeLocation={changeLocation}
@@ -83,10 +74,17 @@ function App() {
   );
 }
 const ContainerApp = styled.div`
+display:flex;
+flex-direction:row;
   border-radius: 25px;
   -webkit-box-shadow: 0 0 70px -10px rgba(0, 0, 0, 0.2);
   box-shadow: 0 0 70px -10px rgba(0, 0, 0, 0.2);
   background-color: #222831;
   height: 400px;
+  @media (max-width: 768px) {
+  flex-direction: column;
+  height: 620px;
+  }
+
 `;
 export default App;
